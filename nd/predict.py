@@ -41,14 +41,14 @@ def checking_nearest_university(loc, loc_u):
       
       
 input_shape = 7
-checkpoint_model = torch.load('demand_model.pt')
+checkpoint_model = torch.load('nd/demand_model.pt')
 model = LinRes(input_shape)
 model.load_state_dict(checkpoint_model['model_state_dict'])
 
 with open('scaler.pickle', 'rb') as f:
   scaler = pickle.load(f)
   
-universities = pd.read_csv('dataset/ipt_johor.csv')
+universities = pd.read_csv('nd/dataset/ipt_johor.csv')
 
 longitude, latitude = list(), list()
 for longlat in universities.LongLat:
