@@ -45,7 +45,7 @@ checkpoint_model = torch.load('nd/demand_model.pt')
 model = LinRes(input_shape)
 model.load_state_dict(checkpoint_model['model_state_dict'])
 
-with open('scaler.pickle', 'rb') as f:
+with open('nd/scaler.pickle', 'rb') as f:
   scaler = pickle.load(f)
   
 universities = pd.read_csv('nd/dataset/ipt_johor.csv')
