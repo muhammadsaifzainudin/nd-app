@@ -1,0 +1,9 @@
+sklearn
+torch
+streamlit
+pandas
+numpy
+plotly
+matplotlib
+folium
+streamlit_folium
