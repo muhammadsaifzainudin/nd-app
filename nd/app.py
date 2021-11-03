@@ -6,6 +6,7 @@ import predict
 import streamlit as st
 from streamlit_folium import folium_static
 import folium
+import statistics
 
 with st.sidebar:
   st.title('Only Johor')
@@ -58,11 +59,11 @@ if submitted:
     urban, suburban, rural = 0, 0, 1
     
   if perc_commercial == '7-14%':
-    perc_commercial = (14. - 7.)/2
+    perc_commercial = statistics.median([7,14])
   elif  perc_commercial == '15-28%' :
-     perc_commercial = (28. - 15.)/2
+     perc_commercial = statistics.median([15,28])
   elif perc_commercial == '>28%':
-     perc_commercial = (100. - 29.)/2
+     perc_commercial = statistics.median([29,100])
 
 
   if len(perc_orang_kaya) == 3:
@@ -71,11 +72,10 @@ if submitted:
     perc_orang_kaya = 30
   elif set(['T20 (Range > RM12586)', 'B40 (Range <RM4849 per month)']).issubset(set(perc_orang_kaya)):
     perc_orang_kaya = 30
-  elif 'T20 (Range > RM12586)' in perc_orang_kaya:
+  elif len(perc_orang_kaya) == 1 and 'T20 (Range > RM12586)' in perc_orang_kaya:
     perc_orang_kaya = 100
   else:
     perc_orang_kaya = 0.
-
 
   total_ports, total_cost, ebit, roi = predict.predict(perc_orang_kaya = float(perc_orang_kaya/100), 
                                                        perc_high_rise = float(perc_high_rise)/50, 
