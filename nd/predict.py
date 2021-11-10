@@ -90,7 +90,7 @@ def predict(**kwargs):
     product_commercial = round(0.8 * y * kwargs['perc_commercial'])
     balance = round(0.8 * (y - product_kaya - product_sederhana - product_commercial))
     
-    revenue = (139.0 * product_kaya + 129.0 * product_sederhana + 139.0 * product_commercial + 89.0 * balance) * 24
+    revenue = (139.0 * product_kaya + 129.0 * product_sederhana + 139.0 * product_commercial + 89.0 * balance) * 36
     total_cost  = kwargs['manpower'] + kwargs['material'] + kwargs['incidental']
     ebit = round(revenue - total_cost, 2)
     roi = round(ebit/total_cost, 2)
