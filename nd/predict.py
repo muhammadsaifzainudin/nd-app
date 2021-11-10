@@ -88,7 +88,7 @@ def predict(**kwargs):
     product_kaya = round(0.4 * y * kwargs['perc_orang_kaya'])
     product_sederhana = round(0.6 * y * kwargs['perc_orang_kaya'])
     product_commercial = round(0.8 * y * kwargs['perc_commercial'])
-    balance = round(0.95 * (y - product_kaya - product_sederhana - product_commercial))
+    balance = round(1.0 * (y - product_kaya - product_sederhana - product_commercial))
     
     revenue = (139.0 * product_kaya + 129.0 * product_sederhana + 139.0 * product_commercial + 89.0 * balance) * 36
     total_cost  = kwargs['manpower'] + kwargs['material'] + kwargs['incidental']
