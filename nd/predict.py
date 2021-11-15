@@ -4,6 +4,8 @@ from torch.nn import functional as F
 import pickle
 import numpy as np
 import pandas as pd
+import math
+import numpy_financial as npf
 
 
 class LinRes(nn.Module):
@@ -84,19 +86,86 @@ def predict(**kwargs):
     
     if y < 0:
       y = 0
-      
-    product_kaya = round(0.4 * y * kwargs['perc_orang_kaya'])
-    product_sederhana = round(0.6 * y * kwargs['perc_orang_kaya'])
-    product_commercial = round(0.8 * y * kwargs['perc_commercial'])
-    balance = round(1.0 * (y - product_kaya - product_sederhana - product_commercial))
+
+    if y % 8 != 0:
+      y = 8 * math.ceil(y/8)
+
+    cost_urban_suru = np.array([430.35, 491.15, 491.15])
+    urban_suru = np.array([kwargs['urban'],  kwargs['suburban'], kwargs['rural']])
+    total_cost = round(y * np.sum(np.matmul(urban_suru, cost_urban_suru)), 2)
+
+    rev_home_biz = np.array([129.0*12, 139.0*12])
+    product_home = list()
+    product_biz = list()
     
-    revenue = (139.0 * product_kaya + 129.0 * product_sederhana + 139.0 * product_commercial + 89.0 * balance) * 36
-    total_cost  = kwargs['manpower'] + kwargs['material'] + kwargs['incidental']
-    ebit = round(revenue - total_cost, 2)
-    roi = round((ebit/total_cost) * 100, 2)
+    perc_home = 1 - kwargs['perc_commercial']
+    max_home = round(y * perc_home)
+    max_biz = round(y * kwargs['perc_commercial'])
+    total_home = round(y * 0.8 * perc_home)
+    total_biz = round(y * 0.8 *  kwargs['perc_commercial'] )
+    product_home.append(total_home)
+    product_biz.append(total_biz)
+
+    for _ in range(2, 8):
+      total_home += round(y * 0.1 * perc_home)
+      total_biz += round(y * 0.1 * perc_home)
+
+      if total_home >= max_home:
+        total_home = max_home
+
+      if total_biz >= max_biz:
+        total_biz = max_biz
+
+      product_home.append(total_home)
+      product_biz.append(total_biz)
+
+    unit_revenue = np.array([product_home, product_biz])  
+    total_revenue = np.dot(unit_revenue.T, rev_home_biz)
+
+    usp = list()
+    for revenue in total_revenue:
+      usp.append(0.06 * revenue)
+    usp = np.array(usp)
+
+
+    operation_cost = list()
+    inflation_rate = 0.04
+    for i in range(1, 8):
+      operation_cost.append(0.1 * total_cost * math.pow(1+inflation_rate, i))
+    operation_cost = np.array(operation_cost)
+
+
+    usp = np.insert(usp, 0, 0)
+    operation_cost = np.insert(operation_cost, 0, 0)
+
+    opex = usp + operation_cost
+    np.put(opex, 0, total_cost)
+    total_revenue = np.insert(total_revenue, 0, 0)
+    net_cash_flow = total_revenue - opex
+    
+    pv_cash_flow = 0
+    pv_cash_flows = list()
+    cumulative_cash_flow = list()
+
+    for i, cash_flow in enumerate(net_cash_flow):
+      discounted_rate = 1/math.pow((1+0.12), i)
+      pv = cash_flow * discounted_rate
+      pv_cash_flow += pv
+
+      pv_cash_flows.append(pv)
+      cumulative_cash_flow.append(pv_cash_flow)
+
+    payback_period = 0
+    for i, cash_flow in enumerate(cumulative_cash_flow):
+      if cash_flow > 0:
+        payback_period = i-1 + (abs(cumulative_cash_flow[i-1]) / pv_cash_flows[i])
+        break
+
+    irr = npf.irr(net_cash_flow)
+
     
     
-    return y, total_cost, ebit, roi
+    return y, total_cost,  irr* 100, payback_period
     
     
 

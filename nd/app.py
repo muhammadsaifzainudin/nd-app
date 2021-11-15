@@ -41,9 +41,6 @@ with st.sidebar:
       #perc_high_rise = st.slider(f'What is percentage of high rises in {area}?',
                          #min_value = 0.0, max_value = 100.0)
       
-      manpower = st.text_input(f'What is the total manpower cost (RM)?')
-      material = st.text_input(f'What is the total material cost (RM) ?')
-      incidental = st.text_input(f'What is the total incidental cost (RM)?')
   
       submitted = st.form_submit_button('Submit')
     
@@ -77,17 +74,15 @@ if submitted:
   else:
     perc_orang_kaya = 0.
 
-  total_ports, total_cost, ebit, roi = predict.predict(perc_orang_kaya = float(perc_orang_kaya/100), 
+  total_ports, total_cost, irr, payback_period = predict.predict(perc_orang_kaya = float(perc_orang_kaya/100), 
                                                        perc_high_rise = float(perc_high_rise)/50, 
                                                        perc_commercial = float(perc_commercial/100),
                                                        latitude = float(latitude),
                                                        longitude = float(longitude),
                                                        urban = urban, 
                                                        suburban = suburban, 
-                                                       rural = 1,
-                                                       manpower = float(manpower), 
-                                                       material = float(material), 
-                                                       incidental = float(incidental))
+                                                       rural = 1
+                                                        )
   
   
   
@@ -107,8 +102,10 @@ if submitted:
   
   col1, col2, col3= st.columns(3)
   col1.metric("Cost of Investment (RM)", "RM{:,.2f}".format(total_cost))
-  col2.metric("EBIT (RM) Within 3 Years", "RM{:,.2f}".format(ebit))
-  col3.metric("ROI (%)", roi)
+  col2.metric("Internal Rate of Return (%)", "{:,.2f}%".format(irr))
+  col3.metric("Payback Period (years)" , "{:,.2f}".format(payback_period) )
+
+
 
 
 
