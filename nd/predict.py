@@ -98,17 +98,20 @@ def predict(**kwargs):
     product_home = list()
     product_biz = list()
     
+    incremental_factors = kwargs['incremental_factors']
+
     perc_home = 1 - kwargs['perc_commercial']
     max_home = round(y * perc_home)
     max_biz = round(y * kwargs['perc_commercial'])
-    total_home = round(y * 0.8 * perc_home)
-    total_biz = round(y * 0.8 *  kwargs['perc_commercial'] )
+    
+    total_home = 0.0
+    total_biz = 0.0
     product_home.append(total_home)
     product_biz.append(total_biz)
 
-    for _ in range(2, 8):
-      total_home += round(y * 0.1 * perc_home)
-      total_biz += round(y * 0.1 * perc_home)
+    for i in range(7):
+      total_home += round(y * incremental_factors[i] * perc_home)
+      total_biz += round(y * incremental_factors[i] * perc_home)
 
       if total_home >= max_home:
         total_home = max_home
@@ -135,17 +138,19 @@ def predict(**kwargs):
     operation_cost = np.array(operation_cost)
 
 
-    usp = np.insert(usp, 0, 0)
+    #usp = np.insert(usp, 0, 0)
     operation_cost = np.insert(operation_cost, 0, 0)
 
     opex = usp + operation_cost
     np.put(opex, 0, total_cost)
-    total_revenue = np.insert(total_revenue, 0, 0)
+    #total_revenue = np.insert(total_revenue, 0, 0)
     net_cash_flow = total_revenue - opex
     
     pv_cash_flow = 0
     pv_cash_flows = list()
     cumulative_cash_flow = list()
+
+
 
     for i, cash_flow in enumerate(net_cash_flow):
       discounted_rate = 1/math.pow((1+0.12), i)
@@ -162,6 +167,8 @@ def predict(**kwargs):
         break
 
     irr = npf.irr(net_cash_flow)
+
+  
 
     
     

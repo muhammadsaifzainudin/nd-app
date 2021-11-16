@@ -7,6 +7,8 @@ import streamlit as st
 from streamlit_folium import folium_static
 import folium
 import statistics
+import numpy as np
+
 
 with st.sidebar:
   st.title('Only Johor')
@@ -40,8 +42,15 @@ with st.sidebar:
 
       #perc_high_rise = st.slider(f'What is percentage of high rises in {area}?',
                          #min_value = 0.0, max_value = 100.0)
+
+      year_1 = st.number_input('What is incremental factor (%) for year 1?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_2 = st.number_input('What is incremental factor (%) for year 2?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_3 = st.number_input('What is incremental factor (%) for year 3?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_4 = st.number_input('What is incremental factor (%) for year 4?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_5 = st.number_input('What is incremental factor (%) for year 5?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_6 = st.number_input('What is incremental factor (%) for year 6?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_7 = st.number_input('What is incremental factor (%) for year 7?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
       
-  
       submitted = st.form_submit_button('Submit')
     
     
@@ -74,6 +83,9 @@ if submitted:
   else:
     perc_orang_kaya = 0.
 
+  incremental_factors = np.array([year_1, year_2, year_3, year_4, year_5, year_6, year_7])
+  incremental_factors = incremental_factors/100
+
   total_ports, total_cost, irr, payback_period = predict.predict(perc_orang_kaya = float(perc_orang_kaya/100), 
                                                        perc_high_rise = float(perc_high_rise)/50, 
                                                        perc_commercial = float(perc_commercial/100),
@@ -81,7 +93,8 @@ if submitted:
                                                        longitude = float(longitude),
                                                        urban = urban, 
                                                        suburban = suburban, 
-                                                       rural = rural
+                                                       rural = rural,
+                                                       incremental_factors = incremental_factors
                                                         )
   
   
