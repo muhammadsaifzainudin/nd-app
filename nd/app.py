@@ -81,7 +81,7 @@ if submitted:
                                                        longitude = float(longitude),
                                                        urban = urban, 
                                                        suburban = suburban, 
-                                                       rural = 1
+                                                       rural = rural
                                                         )
   
   
