@@ -38,18 +38,18 @@ with st.sidebar:
       type_community = st.radio(f'What is the type of community in {area}?',
                             ('urban', 'suburban','rural'))
       
-      perc_high_rise = st.text_input(f'What is total number of high rise buildings in {area}?')
+      perc_high_rise = st.number_input(f'What is total number of high rise buildings in {area}?', min_value=0, max_value=100, value=0, step=1)
 
       #perc_high_rise = st.slider(f'What is percentage of high rises in {area}?',
                          #min_value = 0.0, max_value = 100.0)
 
-      year_1 = st.number_input('What is incremental factor (%) for year 1?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-      year_2 = st.number_input('What is incremental factor (%) for year 2?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-      year_3 = st.number_input('What is incremental factor (%) for year 3?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-      year_4 = st.number_input('What is incremental factor (%) for year 4?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-      year_5 = st.number_input('What is incremental factor (%) for year 5?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-      year_6 = st.number_input('What is incremental factor (%) for year 6?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
-      year_7 = st.number_input('What is incremental factor (%) for year 7?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_1 = st.number_input('What is demand factor (%) for year 1?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_2 = st.number_input('What is demand factor (%) for year 2?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_3 = st.number_input('What is demand factor (%) for year 3?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_4 = st.number_input('What is demand factor (%) for year 4?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_5 = st.number_input('What is demand factor (%) for year 5?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_6 = st.number_input('What is demand factor (%) for year 6?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+      year_7 = st.number_input('What is demand factor (%) for year 7?', min_value=0.0, max_value=100.0, value=0.0, step=1.0)
       
       submitted = st.form_submit_button('Submit')
     
